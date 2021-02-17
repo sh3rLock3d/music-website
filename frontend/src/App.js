@@ -5,6 +5,7 @@ import About from './components/about/About';
 import Contact from './components/contact/Contact';
 import Search from './components/search/Search';
 import Profile from './components/profile/Profile';
+import Song from './components/song/Song'
 import './App.css';
 
 function App() {
@@ -71,6 +72,7 @@ function App() {
           <Route path='/contact' component={Contact} />
           <Route path='/about' component={About} />
           <Route path='/profile' component={Profile} />
+          <Route path='/song' component={Song} />
         </Switch>
       </div>
     </Router>

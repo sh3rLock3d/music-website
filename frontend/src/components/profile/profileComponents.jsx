@@ -49,7 +49,7 @@ const AddNewSong = () => {
     const createSong = () => {
         let title = document.getElementById("createmusictitle").value
         let album = document.getElementById("createmusicalbum").value
-        let artist = document.getElementById("createmusicalbum").value
+        let artist = document.getElementById("createmusicartist").value
         let lyric = document.getElementById("createmusiclyric").value
         let data = { title, album, artist, lyric }
 

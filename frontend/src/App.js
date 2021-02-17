@@ -15,7 +15,7 @@ function App() {
   return (
     <Router>
       <div>
-        <nav class="navbar navbar-expand-lg fixed-top">
+        <nav class="navbar navbar-expand-lg">
           <div class="container">
 
             <a class="navbar-brand" href="/">Music World</a>

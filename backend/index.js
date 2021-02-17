@@ -72,7 +72,6 @@ app.post('/api/signup',
 
 app.post('/api/signin',(req, res) => {
     let body = req.body
-    console.log(body)
     Parse.User.enableUnsafeCurrentUser()
     Parse.User.logIn(body.username, body.password)
     .then(
@@ -85,8 +84,17 @@ app.post('/api/signin',(req, res) => {
     )
 })
 
+function getCurrentUser() {
+  const currentUser = Parse.User.current();
+  if (currentUser) {
+      return currentUser
+  } else {
+      return null
+  }  
+}
+
 app.get("/api/getcurrentuser", (req, res) => {
-    const currentUser = Parse.User.current();
+    const currentUser = getCurrentUser()
     if (currentUser) {
         res.send({message: currentUser})
     } else {
@@ -99,7 +107,33 @@ app.get("/api/logout", (req, res) => {
         res.send({message: "logged out successfully"})
     });
 })
-//
+// music
+app.post("/api/addnewsong", (req, res) => {
+  // todo validation
+  if(getCurrentUser()==null) {
+    res.status(400).send({error:"you are not login"})
+  }
 
+  let body = req.body
+  const Music = Parse.Object.extend("Music")
+  const music = new Music();
+  music.set("title", body.title)
+  music.set("album", body.album)
+  music.set("artist", body.artist)
+  music.set("lyric", body.lyric.split("\n"))
+  music.set("createsBy", getCurrentUser())
+  music.save().then(
+    (musis) => {
+      res.send({message:"music created"})      
+    }, (error) => {
+      res.status(400).send({error})
+    }
+  )
+})
+
+app.get("/api/getmysongs", (req, res) =>{
+  
+  res.send({message:"kha baba"})
+})
 
 app.listen(3001)

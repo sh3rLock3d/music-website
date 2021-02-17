@@ -2,27 +2,10 @@ import { copyFileSync } from 'fs';
 import React, { Component } from 'react';
 import { useState } from "react";
 import './Profile.css'
-import {ProfileInfo} from './profileComponents'
-const URL = "http://localhost:3001"
+import {ProfileInfo, AddNewSong, GetMySongs} from './profileComponents'
+import {gethttp, posthttp, URL} from '../requests/Requests'
 // signup
-async function gethttp(url) {
-  let response = await fetch(url);
-  let responsemessage = await response.text();
-  return { body: JSON.parse(responsemessage), status: response.status };
-}
 
-async function posthttp(url, data) {
-  let response = await fetch(url, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(data),
-  })
-  let responsemessage = await response.text();
-
-  return { body: JSON.parse(responsemessage), status: response.status };
-}
 
 const SignUpForm = () => {
   return (
@@ -186,12 +169,8 @@ function UserProfile({user}) {
   return (
     <div>
       <ProfileInfo user = {user}/>
-      <h2>profile</h2>
-      <h2>profile</h2>
-      <h2>profile</h2>
-      <h2>profile</h2>
-      <h2>profile</h2>
-      <h2>profile</h2>
+      <AddNewSong/>
+      <GetMySongs/>
     </div>
   )
 }

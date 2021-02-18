@@ -137,7 +137,6 @@ app.get("/api/getmysongs", (req, res) => {
 })
 
 app.get("/api/search", (req, res) => {
-  console.log(req.query.searchText)
   const Music = Parse.Object.extend("Music")
   const query = new Parse.Query(Music);
   query.matches("title", req.query.searchText)
@@ -153,6 +152,152 @@ app.get("/api/search", (req, res) => {
     res.send({ erorr })
   }
   )
+
+})
+
+async function findCommentsOfSong(music) {
+  if (music.get("allMusicComments") == undefined) {
+    return null
+  }
+  const map1 = music.get("allMusicComments").map(x => x.id);
+  
+  const GameScore = Parse.Object.extend("Comment");
+  const query = new Parse.Query(GameScore);
+  query.containedIn("objectId", map1);
+  const results = await query.find();
+  
+  /*
+  // Do something with the returned Parse.Object values
+  for (let i = 0; i < results.length; i++) {
+    const object = results[i];
+    console.log(object.id + ' - ' + object.get('title'));
+  }
+  */
+ return results
+  //const map2 = results.map(x => x.get('title'));
+  //return map2
+}
+
+
+app.get("/api/song", (req, res) => {
+  const Music = Parse.Object.extend("Music");
+  const query = new Parse.Query(Music);
+  
+  query.get(req.query.songId)
+    .then((music) => {
+      findCommentsOfSong(music).then(
+          (val) => {
+            res.send({ message: music, comments: val })
+          }, (erorr)=> {
+            res.send({ error })
+          }
+      )
+      
+    }, (error) => {
+      res.send({ error })
+    });
+
+})
+
+app.post("/api/addCommentAbout", (req, res) => {
+  // todo validation
+  if (getCurrentUser() == null) {
+    res.status(401).send({ error: "you are not login" })
+    return
+  }
+  let body = req.body
+
+  if (body.c == undefined) {
+    res.status(402).send({ error: "invalid input" })
+    return
+  }
+  if (body.c.startsWith("<script>")) {
+    res.status(403).send({ error: "invalid input" })
+    return
+  }
+
+  const Music = Parse.Object.extend("Music");
+  const query = new Parse.Query(Music);
+  query.get(body.i)
+    .then((music) => {
+
+      const Comment = Parse.Object.extend("Comment")
+      const comment = new Comment();
+      comment.set("title", body.c)
+      comment.set("isAboutComment", true)
+      comment.set("line", -1)
+      comment.set("createsBy", getCurrentUser())
+      comment.save().then(
+        (comment) => {
+          music.add("allMusicComments", comment).save().then(
+            (value) => {
+              res.send({ message: "comment created" })
+            }, (error) => {
+              res.status(400).send({ error })
+            }
+          )
+
+        }, (error) => {
+          res.status(400).send({ error })
+        }
+      )
+    }, (error) => {
+      res.status(400).send({ error })
+    });
+
+
+
+
+})
+
+app.post("/api/addCommentlyrics", (req, res) => {
+  // todo validation
+  if (getCurrentUser() == null) {
+    res.status(401).send({ error: "you are not login" })
+    return
+  }
+  let body = req.body
+
+  if (body.c == undefined) {
+    res.status(402).send({ error: "invalid input" })
+    return
+  }
+  if (body.c.startsWith("<script>")) {
+    res.status(403).send({ error: "invalid input" })
+    return
+  }
+
+  const Music = Parse.Object.extend("Music");
+  const query = new Parse.Query(Music);
+  query.get(body.i)
+    .then((music) => {
+
+      const Comment = Parse.Object.extend("Comment")
+      const comment = new Comment();
+      comment.set("title", body.c)
+      comment.set("isAboutComment", false)
+      comment.set("line", body.n)
+      comment.set("createsBy", getCurrentUser())
+      comment.save().then(
+        (comment) => {
+          music.add("allMusicComments", comment).save().then(
+            (value) => {
+              res.send({ message: "comment created" })
+            }, (error) => {
+              res.status(400).send({ error })
+            }
+          )
+
+        }, (error) => {
+          res.status(400).send({ error })
+        }
+      )
+    }, (error) => {
+      res.status(400).send({ error })
+    });
+
+
+
 
 })
 

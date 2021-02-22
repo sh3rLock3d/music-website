@@ -1,3 +1,4 @@
+import { title } from 'process';
 import React, { Component } from 'react';
 import { useState } from "react";
 import { gethttp, posthttp, URL } from '../requests/Requests'
@@ -27,10 +28,10 @@ const CommentLyrics = ({ line, comments, song }) => {
     }
 
     const thisLineComments = new Array()
-    
-    for (let cc of comments) {
-        if (cc.line == line.lineNumber) {
-            thisLineComments.push(cc.title)
+
+    for (let cc in comments) {
+        if (comments[cc].line == line.lineNumber) {
+            thisLineComments.push(comments[cc].title)
         }
     }
 
@@ -39,7 +40,7 @@ const CommentLyrics = ({ line, comments, song }) => {
     return (
         <>
             <h2 class="mb-4 text-white" data-aos="fade-up" data-aos-delay="500">{line.text}</h2>
-            
+
             {
                 thisLineComments.map(
                     c => <p data-aos="fade-up" data-aos-delay="200">{c}</p>
@@ -121,7 +122,15 @@ const Lyrics = ({ song, comment }) => {
 
 
 
-const Description = () => {
+const Description = ({ song, comment }) => {
+
+    let firsDes = <p data-aos="fade-up" data-aos-delay="800">this song doesn't have any explenation. add one</p>
+
+    for (let cc in comment) {
+        if (comment[cc].isAboutComment) {
+            firsDes = <p data-aos="fade-up" data-aos-delay="800">{comment[cc].title}</p>
+        }
+    }
     return (
         <>
             <section class="Description" id="Description">
@@ -129,13 +138,12 @@ const Description = () => {
                     <div class="row">
 
                         <div class="d-flex flex-column justify-content-center ml-lg-auto mr-lg-5 col-lg-5 col-md-6 col-12">
-                            <h2 class="mb-3 text-white" data-aos="fade-up">sign up</h2>
-
-
-
-                            <p data-aos="fade-up" data-aos-delay="200">Music World is a free webste to find lyrics of your favorate music. if you sign in to our website we promise to respect to your <a rel="nofollow" href="#" target="_parent">privacy</a> .</p>
-
-                            <a href="#" class="btn custom-btn bg-color mt-3" data-aos="fade-up" data-aos-delay="300" data-toggle="modal">Become a member</a>
+                            <h2 class="mb-3 text-white" data-aos="fade-up">{song.title}</h2>
+                            <h2> <i class="fa fa-music"></i> {song.artist} </h2>
+                            <h2> <i class="fa fa-play"></i> {song.album} </h2>
+                            {
+                                firsDes
+                            }
                         </div>
 
                         <div class="mr-lg-auto mt-3 col-lg-4 col-md-6 col-12">
@@ -241,41 +249,25 @@ const About = ({ song, comment }) => {
 }
 
 
-const Comments = ({ song }) => {
+const Comments = ({ song, comment }) => {
+    if (comment == null) {
+        comment = new Array()
+    }
     return (
         <>
             <section class="Comments" id="Comments">
                 <div class="container">
                     <div class="row">
 
-                        <div class="d-flex flex-column justify-content-center ml-lg-auto mr-lg-5 col-lg-5 col-md-6 col-12">
-                            <h2 class="mb-3 text-white" data-aos="fade-up">sign up</h2>
+                        <div class="d-flex flex-column justify-content-center ml-lg-auto mr-lg-5 col-lg-12 col-md-12 col-12">
+                            <h2 class="mb-3 text-white" data-aos="fade-up">comments</h2>
+                            {
+                                comment.map(
+                                    x => <p data-aos="fade-up" data-aos-delay="200"> <i class="fa fa-user"></i> {x.title}</p>
+                                )
+                            }
+                            
 
-
-
-                            <p data-aos="fade-up" data-aos-delay="200">Music World is a free webste to find lyrics of your favorate music. if you sign in to our website we promise to respect to your <a rel="nofollow" href="#" target="_parent">privacy</a> .</p>
-
-                            <a href="#" class="btn custom-btn bg-color mt-3" data-aos="fade-up" data-aos-delay="300" data-toggle="modal">Become a member</a>
-                        </div>
-
-                        <div class="mr-lg-auto mt-3 col-lg-4 col-md-6 col-12">
-                            <div class="about-working-hours">
-                                <div>
-
-                                    <h2 class="mb-4 text-white" data-aos="fade-up" data-aos-delay="500">Music World</h2>
-
-                                    <p data-aos="fade-up" data-aos-delay="800">free lyrics</p>
-
-                                    <p data-aos="fade-up" data-aos-delay="800">findig meaning easily</p>
-
-                                    <p data-aos="fade-up" data-aos-delay="800">talk about songs</p>
-
-                                    <p data-aos="fade-up" data-aos-delay="800">find your favoraye songs</p>
-
-                                    <p data-aos="fade-up" data-aos-delay="800">find new friends</p>
-
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -292,31 +284,13 @@ const Album = ({ song }) => {
                 <div class="container">
                     <div class="row">
 
-                        <div class="d-flex flex-column justify-content-center ml-lg-auto mr-lg-5 col-lg-5 col-md-6 col-12">
-                            <h2 class="mb-3 text-white" data-aos="fade-up">sign up</h2>
-
-
-
-                            <p data-aos="fade-up" data-aos-delay="200">Music World is a free webste to find lyrics of your favorate music. if you sign in to our website we promise to respect to your <a rel="nofollow" href="#" target="_parent">privacy</a> .</p>
-
-                            <a href="#" class="btn custom-btn bg-color mt-3" data-aos="fade-up" data-aos-delay="300" data-toggle="modal">Become a member</a>
-                        </div>
+       
 
                         <div class="mr-lg-auto mt-3 col-lg-4 col-md-6 col-12">
                             <div class="about-working-hours">
                                 <div>
 
-                                    <h2 class="mb-4 text-white" data-aos="fade-up" data-aos-delay="500">Music World</h2>
-
-                                    <p data-aos="fade-up" data-aos-delay="800">free lyrics</p>
-
-                                    <p data-aos="fade-up" data-aos-delay="800">findig meaning easily</p>
-
-                                    <p data-aos="fade-up" data-aos-delay="800">talk about songs</p>
-
-                                    <p data-aos="fade-up" data-aos-delay="800">find your favoraye songs</p>
-
-                                    <p data-aos="fade-up" data-aos-delay="800">find new friends</p>
+                                    <h2 class="mb-4 text-white" data-aos="fade-up" data-aos-delay="500">More From This Album</h2>
 
                                 </div>
                             </div>
@@ -336,31 +310,15 @@ const ContactUs = ({ song }) => {
                 <div class="container">
                     <div class="row">
 
-                        <div class="d-flex flex-column justify-content-center ml-lg-auto mr-lg-5 col-lg-5 col-md-6 col-12">
-                            <h2 class="mb-3 text-white" data-aos="fade-up">sign up</h2>
-
-
-
-                            <p data-aos="fade-up" data-aos-delay="200">Music World is a free webste to find lyrics of your favorate music. if you sign in to our website we promise to respect to your <a rel="nofollow" href="#" target="_parent">privacy</a> .</p>
-
-                            <a href="#" class="btn custom-btn bg-color mt-3" data-aos="fade-up" data-aos-delay="300" data-toggle="modal">Become a member</a>
-                        </div>
 
                         <div class="mr-lg-auto mt-3 col-lg-4 col-md-6 col-12">
                             <div class="about-working-hours">
                                 <div>
 
-                                    <h2 class="mb-4 text-white" data-aos="fade-up" data-aos-delay="500">Music World</h2>
+                                    <h2 class="mb-4 text-white" data-aos="fade-up" data-aos-delay="500">Feel Free to ask us any thing</h2>
 
-                                    <p data-aos="fade-up" data-aos-delay="800">free lyrics</p>
-
-                                    <p data-aos="fade-up" data-aos-delay="800">findig meaning easily</p>
-
-                                    <p data-aos="fade-up" data-aos-delay="800">talk about songs</p>
-
-                                    <p data-aos="fade-up" data-aos-delay="800">find your favoraye songs</p>
-
-                                    <p data-aos="fade-up" data-aos-delay="800">find new friends</p>
+                                    <p data-aos="fade-up" data-aos-delay="200"> <i class="fa fa-email"></i> alipourghasmi78@gmail.com</p>
+                                    <p data-aos="fade-up" data-aos-delay="200"> this is an open source project and needs your help. it makes us happy if you contribute in this project</p>
 
                                 </div>
                             </div>
@@ -430,10 +388,10 @@ const SongComponents = ({ song, comments }) => {
 
             </div>
             <div class="page-content">
-                <Description />
+                <Description song={song} comment={comments} />
                 <Lyrics song={song} comment={comments} />
                 <About song={song} comment={comments} />
-                <Comments song={song} />
+                <Comments song={song} comment={comments} />
                 <Album song={song} />
                 <ContactUs song={song} />
             </div>
